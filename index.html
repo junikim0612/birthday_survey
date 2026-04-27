@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<title>생일 후기</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  color-scheme: light only;
+  --bg:#fafaf7;
+  --card:#ffffff;
+  --accent:#e8a8b8;
+  --accent-soft:#fce4e9;
+  --text:#2c2c2c;
+  --muted:#8a8a8a;
+  --border:#ebebe6;
+}
+html { color-scheme: light only; background:#fafaf7; }
+body {
+  background:#fafaf7 !important;
+  color:#2c2c2c !important;
+  font-family:'Noto Sans KR', -apple-system, sans-serif;
+  font-weight:400;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+.container {
+  max-width:520px; margin:0 auto;
+  padding:48px 22px 80px;
+}
+
+/* 인트로 */
+.intro {
+  text-align:center;
+  margin-bottom:36px;
+}
+.intro-emoji {
+  font-size:36px;
+  margin-bottom:14px;
+}
+.intro-title {
+  font-size:26px;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.4;
+  margin-bottom:12px;
+  letter-spacing:-0.5px;
+}
+.intro-sub {
+  font-size:14px;
+  font-weight:400;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* 질문 카드 */
+.q-card {
+  background:#ffffff !important;
+  border-radius:18px;
+  padding:24px 22px;
+  margin-bottom:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.03);
+  border:1px solid var(--border);
+}
+.q-num {
+  display:inline-block;
+  background:var(--accent-soft);
+  color:#c47084;
+  font-size:11px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:10px;
+  margin-bottom:12px;
+  letter-spacing:0.5px;
+}
+.q-text {
+  font-size:16px;
+  font-weight:500;
+  color:var(--text);
+  line-height:1.5;
+  margin-bottom:18px;
+  letter-spacing:-0.3px;
+}
+
+/* 옵션 */
+.opt-list {
+  display:flex; flex-direction:column; gap:8px;
+}
+.opt-btn {
+  padding:13px 16px;
+  background:#f7f7f3;
+  border:1.5px solid transparent;
+  color:#444;
+  font-family:inherit;
+  font-weight:400; font-size:14px;
+  text-align:left;
+  border-radius:12px;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.opt-btn:active { transform:scale(0.98); }
+.opt-btn.selected {
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:#a0556a;
+  font-weight:500;
+}
+
+/* 점수 */
+.score-row {
+  display:flex; gap:6px;
+}
+.score-btn {
+  flex:1;
+  padding:13px 0;
+  background:#f7f7f3;
+  border:1.5px solid transparent;
+  color:#666;
+  font-family:inherit;
+  font-weight:500; font-size:14px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.score-btn:active { transform:scale(0.96); }
+.score-btn.selected {
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:#a0556a;
+  font-weight:600;
+}
+
+
+/* 슬라이더 */
+.slider-wrap {
+  padding:8px 4px 4px;
+}
+.slider-value {
+  text-align:center;
+  font-size:32px;
+  font-weight:600;
+  color:#a0556a;
+  margin-bottom:18px;
+  letter-spacing:-1px;
+  transition:color 0.2s ease;
+}
+.slider-unit {
+  font-size:18px;
+  font-weight:500;
+  color:var(--accent);
+  margin-left:2px;
+}
+.slider {
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:6px;
+  border-radius:6px;
+  background:linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, #f0f0eb 50%, #f0f0eb 100%);
+  outline:none;
+  margin-bottom:10px;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  appearance:none;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid var(--accent);
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(232,168,184,0.4);
+  transition:transform 0.15s ease;
+}
+.slider::-webkit-slider-thumb:active {
+  transform:scale(1.15);
+}
+.slider::-moz-range-thumb {
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid var(--accent);
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(232,168,184,0.4);
+}
+.slider-marks {
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:500;
+  padding:0 4px;
+}
+/* 텍스트 입력 */
+.text-input {
+  width:100%;
+  min-height:90px;
+  padding:14px 16px;
+  background:#f7f7f3 !important;
+  color:#2c2c2c !important;
+  border:1.5px solid transparent;
+  font-family:inherit;
+  font-weight:400; font-size:16px;
+  line-height:1.6;
+  border-radius:12px;
+  resize:none;
+  outline:none;
+  transition:all 0.15s ease;
+}
+.text-input:focus { border-color:var(--accent); background:#fff; }
+.text-input::placeholder { color:#bbb; }
+
+/* 제출 */
+.submit-btn {
+  width:100%;
+  margin-top:18px;
+  padding:17px;
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  font-family:inherit;
+  font-weight:600;
+  font-size:15px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:all 0.15s ease;
+  letter-spacing:-0.2px;
+}
+.submit-btn:active { transform:scale(0.98); }
+.submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+
+/* 완료 화면 */
+.done-screen {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(252,228,233,0.97);
+  display:none;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:40px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.done-screen.show { display:flex; }
+.done-emoji {
+  font-size:60px;
+  margin-bottom:18px;
+  animation:beat 1.4s ease-in-out infinite;
+}
+@keyframes beat {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.12); }
+}
+.done-title {
+  font-size:24px;
+  font-weight:600;
+  color:#a0556a;
+  margin-bottom:14px;
+  letter-spacing:-0.4px;
+}
+.done-sub {
+  font-size:14px;
+  font-weight:400;
+  color:#8a4a5e;
+  line-height:1.7;
+  margin-bottom:28px;
+}
+.done-btn {
+  padding:13px 36px;
+  background:#fff;
+  border:1.5px solid var(--accent);
+  color:#a0556a;
+  font-family:inherit;
+  font-weight:500; font-size:14px;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+/* 답변 보기 */
+.toggle-records {
+  display:block;
+  width:100%;
+  margin-top:24px;
+  padding:14px;
+  background:transparent;
+  border:1.5px dashed #ddd;
+  color:var(--muted);
+  font-family:inherit;
+  font-weight:500;
+  font-size:13px;
+  border-radius:12px;
+  cursor:pointer;
+}
+.records {
+  margin-top:20px;
+}
+.records-title {
+  font-size:13px;
+  font-weight:600;
+  color:var(--muted);
+  text-align:center;
+  margin-bottom:14px;
+  letter-spacing:0.5px;
+}
+.record-item {
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 18px;
+  margin-bottom:10px;
+}
+.record-date {
+  font-size:11px;
+  font-weight:500;
+  color:var(--accent);
+  background:var(--accent-soft);
+  display:inline-block;
+  padding:3px 9px;
+  border-radius:8px;
+  margin-bottom:12px;
+}
+.record-q {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+  margin-top:10px;
+  margin-bottom:3px;
+  letter-spacing:0.3px;
+}
+.record-a {
+  color:var(--text);
+  font-size:13.5px;
+  font-weight:400;
+  line-height:1.6;
+}
+.no-records {
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  padding:24px 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="intro">
+    <div class="intro-emoji">🌷</div>
+    <div class="intro-title">당신의 생일<br>바로 어제, 어땠어요?</div>
+    <div class="intro-sub">
+      당신의 솔직한 마음이 궁금해요.<br>
+      오래 간직하고 싶어서 적어두려고 해요.
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card">
+    <div class="q-num">QUESTION 01</div>
+    <div class="q-text">어제 하루 분위기, 한 단어로 표현하면?</div>
+    <div class="opt-list" data-q="q1">
+      <button class="opt-btn" data-v="따뜻했어요">따뜻했어요</button>
+      <button class="opt-btn" data-v="설렜어요">설렜어요</button>
+      <button class="opt-btn" data-v="감동이었어요">감동이었어요</button>
+      <button class="opt-btn" data-v="잊을 수 없어요">잊을 수 없어요</button>
+      <button class="opt-btn" data-v="평생 기억에 남을 것 같아요">평생 기억에 남을 것 같아요</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-num">QUESTION 02</div>
+    <div class="q-text">남편의 마음, 어떻게 느껴졌어요?</div>
+    <div class="opt-list" data-q="q2">
+      <button class="opt-btn" data-v="진심이 가득 담겨있었어요">진심이 가득 담겨있었어요</button>
+      <button class="opt-btn" data-v="오랫동안 준비한 게 느껴졌어요">오랫동안 준비한 게 느껴졌어요</button>
+      <button class="opt-btn" data-v="저를 정말 많이 사랑하는구나 싶었어요">저를 정말 많이 사랑하는구나 싶었어요</button>
+      <button class="opt-btn" data-v="섬세하고 다정한 마음이 보였어요">섬세하고 다정한 마음이 보였어요</button>
+      <button class="opt-btn" data-v="이 사람과 함께라서 행복하다고 느꼈어요">이 사람과 함께라서 행복하다고 느꼈어요</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-num">QUESTION 03</div>
+    <div class="q-text">남편의 태도, 100점 만점에 몇 점?</div>
+    <div class="slider-wrap" data-q="q3">
+      <div class="slider-value">
+        <span id="sliderVal">50</span><span class="slider-unit">점</span>
+      </div>
+      <input type="range" min="0" max="100" value="50" step="1" class="slider" id="scoreSlider">
+      <div class="slider-marks">
+        <span>0</span>
+        <span>50</span>
+        <span>100</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card">
+    <div class="q-num">QUESTION 04</div>
+    <div class="q-text">어제 하루 중 가장 기억에 남는 순간은?</div>
+    <div class="opt-list" data-q="q4">
+      <button class="opt-btn" data-v="자정에 받은 앱과 케이크, 깜짝 선물">자정에 받은 앱과 케이크, 깜짝 선물</button>
+      <button class="opt-btn" data-v="아침에 거실에 걸려있던 풍선">아침에 거실에 걸려있던 풍선</button>
+      <button class="opt-btn" data-v="가죽공방에서 함께 만든 여권파우치">가죽공방에서 함께 만든 여권파우치</button>
+      <button class="opt-btn" data-v="Jun's Kitchen에서 직접 차려준 7코스 오마카세">Jun's Kitchen에서 직접 차려준 7코스 오마카세</button>
+      <button class="opt-btn" data-v="예상치 못한 꽃다발">예상치 못한 꽃다발</button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-num">QUESTION 05</div>
+    <div class="q-text">남편에게 한마디 남긴다면?</div>
+    <textarea class="text-input" data-q="q5" placeholder="짧아도 괜찮아요..."></textarea>
+  </div>
+
+  <button class="submit-btn" id="submitBtn">제출하기</button>
+
+  <button class="toggle-records" id="toggleRecords">📒 저장된 답변 보기</button>
+  <div class="records" id="records" style="display:none;"></div>
+
+</div>
+
+<div class="done-screen" id="doneScreen">
+  <div>
+    <div class="done-emoji">💕</div>
+    <div class="done-title">고마워요</div>
+    <div class="done-sub">
+      당신의 답변, 잘 받았어요.<br>
+      이 마음이 다음 10년의 시작이 되길.
+    </div>
+    <button class="done-btn" id="doneBtn">닫기</button>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'birthday_survey_v2';
+
+document.querySelectorAll('.opt-list').forEach(function(list){
+  list.addEventListener('click', function(e){
+    if(e.target.classList.contains('opt-btn')){
+      list.querySelectorAll('.opt-btn').forEach(function(b){ b.classList.remove('selected'); });
+      e.target.classList.add('selected');
+    }
+  });
+});
+
+// 슬라이더
+var slider = document.getElementById('scoreSlider');
+var sliderVal = document.getElementById('sliderVal');
+function updateSlider(){
+  var v = slider.value;
+  sliderVal.textContent = v;
+  // 트랙 색상 채우기
+  var pct = v + '%';
+  slider.style.background = 'linear-gradient(to right, var(--accent) 0%, var(--accent) ' + pct + ', #f0f0eb ' + pct + ', #f0f0eb 100%)';
+}
+slider.addEventListener('input', updateSlider);
+updateSlider();
+
+document.getElementById('submitBtn').addEventListener('click', function(){
+  var q1Sel = document.querySelector('[data-q="q1"] .opt-btn.selected');
+  var q3Val = document.getElementById('scoreSlider').value;
+
+  var q2Sel = document.querySelector('[data-q="q2"] .opt-btn.selected');
+  var q4Sel = document.querySelector('[data-q="q4"] .opt-btn.selected');
+
+  var record = {
+    date: new Date().toISOString(),
+    q1: q1Sel ? q1Sel.dataset.v : '(선택 안 함)',
+    q2: q2Sel ? q2Sel.dataset.v : '(선택 안 함)',
+    q3: q3Val + '점',
+    q4: q4Sel ? q4Sel.dataset.v : '(선택 안 함)',
+    q5: document.querySelector('[data-q="q5"]').value || '(작성 안 함)'
+  };
+
+  try {
+    var existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    existing.push(record);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {
+    console.error('저장 실패:', e);
+    alert('저장에 실패했어요. 다시 시도해주세요.');
+    return;
+  }
+
+  document.getElementById('doneScreen').classList.add('show');
+});
+
+document.getElementById('doneBtn').addEventListener('click', function(){
+  document.getElementById('doneScreen').classList.remove('show');
+  document.querySelectorAll('.opt-btn.selected').forEach(function(b){ b.classList.remove('selected'); });
+  document.querySelectorAll('.text-input').forEach(function(t){ t.value = ''; });
+  slider.value = 50;
+  updateSlider();
+  loadRecords();
+});
+
+function loadRecords(){
+  var container = document.getElementById('records');
+  var records = [];
+  try {
+    records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch(e){}
+
+  if(records.length === 0){
+    container.innerHTML = '<div class="records-title">RECORDS</div><div class="no-records">아직 저장된 답변이 없어요</div>';
+    return;
+  }
+
+  var html = '<div class="records-title">' + records.length + '개의 답변이 저장되어 있어요</div>';
+  records.slice().reverse().forEach(function(r){
+    var d = new Date(r.date);
+    var dateStr = d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+    html += '<div class="record-item">';
+    html += '<div class="record-date">' + dateStr + '</div>';
+    html += '<div class="record-q">Q1. 어제 하루 분위기</div><div class="record-a">' + escapeHtml(r.q1) + '</div>';
+    html += '<div class="record-q">Q2. 남편의 마음</div><div class="record-a">' + escapeHtml(r.q2) + '</div>';
+    html += '<div class="record-q">Q3. 남편의 태도 점수</div><div class="record-a">' + escapeHtml(r.q3) + '</div>';
+    html += '<div class="record-q">Q4. 가장 기억에 남는 순간</div><div class="record-a">' + escapeHtml(r.q4) + '</div>';
+    html += '<div class="record-q">Q5. 한마디</div><div class="record-a">' + escapeHtml(r.q5) + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+document.getElementById('toggleRecords').addEventListener('click', function(){
+  var rec = document.getElementById('records');
+  if(rec.style.display === 'none'){
+    rec.style.display = 'block';
+    this.textContent = '📕 답변 숨기기';
+    loadRecords();
+  } else {
+    rec.style.display = 'none';
+    this.textContent = '📒 저장된 답변 보기';
+  }
+});
+</script>
+</body>
+</html>
