@@ -230,10 +230,20 @@ body {
   font-size:15px;
   border-radius:14px;
   cursor:pointer;
-  transition:all 0.15s ease;
+  transition:background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   letter-spacing:-0.2px;
+  box-shadow:0 2px 8px rgba(232,168,184,0.25);
 }
-.submit-btn:active { transform:scale(0.98); }
+.submit-btn:hover {
+  background:#d68a9c;
+  box-shadow:0 4px 14px rgba(214,138,156,0.4);
+  transform:translateY(-1px);
+}
+.submit-btn:active {
+  background:#c47084;
+  transform:scale(0.98);
+  box-shadow:0 2px 6px rgba(196,112,132,0.5);
+}
 .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
 
 /* 완료 화면 */
@@ -282,6 +292,31 @@ body {
   cursor:pointer;
 }
 
+
+.record-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+}
+.record-delete {
+  background:transparent;
+  border:1px solid #f0ccd0;
+  color:#c47084;
+  font-family:inherit;
+  font-weight:500;
+  font-size:11px;
+  padding:5px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.record-delete:hover {
+  background:#fce4e9;
+}
+.record-delete:active {
+  transform:scale(0.95);
+}
 /* 답변 보기 */
 .toggle-records {
   display:block;
@@ -379,9 +414,9 @@ body {
     <div class="opt-list" data-q="q2">
       <button class="opt-btn" data-v="진심이 가득 담겨있었어요">진심이 가득 담겨있었어요</button>
       <button class="opt-btn" data-v="오랫동안 준비한 게 느껴졌어요">오랫동안 준비한 게 느껴졌어요</button>
-      <button class="opt-btn" data-v="저를 정말 많이 사랑하는구나 싶었어요">저를 정말 많이 사랑하는구나 싶었어요</button>
+      <button class="opt-btn" data-v="표현 하나하나에 정성이 느껴졌어요">표현 하나하나에 정성이 느껴졌어요</button>
       <button class="opt-btn" data-v="섬세하고 다정한 마음이 보였어요">섬세하고 다정한 마음이 보였어요</button>
-      <button class="opt-btn" data-v="이 사람과 함께라서 행복하다고 느꼈어요">이 사람과 함께라서 행복하다고 느꼈어요</button>
+      <button class="opt-btn" data-v="조용히 챙겨주는 게 좋았어요">조용히 챙겨주는 게 좋았어요</button>
     </div>
   </div>
 
@@ -410,7 +445,7 @@ body {
       <button class="opt-btn" data-v="자정에 받은 앱과 케이크, 깜짝 선물">자정에 받은 앱과 케이크, 깜짝 선물</button>
       <button class="opt-btn" data-v="아침에 거실에 걸려있던 풍선">아침에 거실에 걸려있던 풍선</button>
       <button class="opt-btn" data-v="가죽공방에서 함께 만든 여권파우치">가죽공방에서 함께 만든 여권파우치</button>
-      <button class="opt-btn" data-v="Jun's Kitchen에서 직접 차려준 7코스 오마카세">Jun's Kitchen에서 직접 차려준 7코스 오마카세</button>
+      <button class="opt-btn" data-v="직접 차려준 7코스 오마카세">직접 차려준 7코스 오마카세</button>
       <button class="opt-btn" data-v="예상치 못한 꽃다발">예상치 못한 꽃다발</button>
     </div>
   </div>
@@ -521,7 +556,10 @@ function loadRecords(){
     var d = new Date(r.date);
     var dateStr = d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
     html += '<div class="record-item">';
+    html += '<div class="record-header">';
     html += '<div class="record-date">' + dateStr + '</div>';
+    html += '<button class="record-delete" data-date="' + r.date + '">삭제</button>';
+    html += '</div>';
     html += '<div class="record-q">Q1. 어제 하루 분위기</div><div class="record-a">' + escapeHtml(r.q1) + '</div>';
     html += '<div class="record-q">Q2. 남편의 마음</div><div class="record-a">' + escapeHtml(r.q2) + '</div>';
     html += '<div class="record-q">Q3. 남편의 태도 점수</div><div class="record-a">' + escapeHtml(r.q3) + '</div>';
@@ -530,6 +568,25 @@ function loadRecords(){
     html += '</div>';
   });
   container.innerHTML = html;
+
+  // 삭제 버튼 이벤트 (날짜 기반)
+  container.querySelectorAll('.record-delete').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(!confirm('이 답변을 삭제할까요?')) return;
+      var targetDate = this.dataset.date;
+      try {
+        var recs = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        var filtered = recs.filter(function(r){ return r.date !== targetDate; });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+        loadRecords();
+      } catch(err) {
+        console.error(err);
+        alert('삭제 실패: ' + err.message);
+      }
+    });
+  });
 }
 
 function escapeHtml(s) {
